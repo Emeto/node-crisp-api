@@ -1,3 +1,5 @@
+import Website = require("./services/Website");
+
 export = Crisp;
 /**
  * Crisp API Library
@@ -25,7 +27,7 @@ declare class Crisp {
      * @public
      * @type {*}
     */
-    public website: any;
+    public website: Website;
     /**
      * @public
      * @type {object}

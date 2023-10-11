@@ -1,3 +1,5 @@
+import * as Crisp from "../crisp";
+
 export = WebsiteAnalytics;
 /**
  * Crisp WebsiteAnalytics Resource
@@ -11,5 +13,5 @@ declare class WebsiteAnalytics {
      * @class
      * @classdesc This is the Crisp Website Analytics Resource
      */
-    constructor(service: any, crisp: any);
+    constructor(service: any, crisp: Crisp.Crisp);
 }
