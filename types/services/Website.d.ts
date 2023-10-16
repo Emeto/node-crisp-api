@@ -69,6 +69,53 @@ interface IListAnalyticsClassifiers {
   };
 }
 
+interface IGetWebsiteAvailabilityStatus {
+  error: boolean;
+  reason: string;
+  data: {
+    status: "online" | "away" | "offline";
+    since: number;
+  };
+}
+
+interface IListWebsiteOperatorAvailabilities {
+  error: boolean;
+  reason: string;
+  data: {
+    user_id: string;
+    type: "online" | "away" | "offline";
+    time: {
+      for: number;
+      since: number;
+    }
+  };
+}
+
+interface ICreateWebsite {
+  error: boolean;
+  reason: string;
+  data: {
+    website_id: string;
+  };
+}
+
+interface IGetWebsite {
+  error: boolean;
+  reason: string;
+  data: {
+    website_id: string;
+    name: string;
+    domain: string;
+    logo: string;
+  }
+}
+
+interface IEmptyResponse {
+  error: boolean;
+  reason: string;
+  data: {};
+}
+
 /**
  * Crisp Website Service
  * @class
@@ -86,7 +133,7 @@ declare class Website {
     websiteID: string,
     pointType: PointType,
     pointMetric: PointMetric<PointType>,
-    dateForm: string,
+    dateFrom: string,
     dateTo: string,
     dateSplit: string,
     classifier?: string,
@@ -97,10 +144,8 @@ declare class Website {
 
   listAnalyticsFilters: (
     websiteID: string,
-    pointType: string,
-    pointMetric: string,
     pageNumber?: number,
-    dateForm?: string,
+    dateFrom?: string,
     dateTo?: string,
   ) => Promise<IListAnalyticsFilters>;
 
@@ -109,7 +154,65 @@ declare class Website {
     pageNumber: number,
     pointType: string,
     pointMetric: string,
-    dateForm: string,
+    dateFrom: string,
     dateTo: string,
   ) => Promise<IListAnalyticsClassifiers>;
+
+  getWebsiteAvailabilityStatus: (
+    websiteID: string,
+  ) => Promise<IGetWebsiteAvailabilityStatus>;
+
+  listWebsiteOperatorAvailabilities: (
+    websiteID: string,
+  ) => Promise<IListWebsiteOperatorAvailabilities>;
+
+  checkWebsiteExists: (
+    domain: string,
+  ) => Promise<any>;
+
+  createWebsite: (
+    websiteData: {
+      name: string;
+      domain: string;
+    }
+  ) => Promise<ICreateWebsite>;
+
+  getWebsite: (
+    websiteID: string,
+  ) => Promise<IGetWebsite>;
+
+  deleteWebsite: (
+    websiteID: string,
+    verify: string,
+  ) => Promise<IEmptyResponse>;
+
+  batchResolveConversations: (
+    websiteID: string,
+    sessions: string[],
+  ) => Promise<IEmptyResponse>;
+
+  batchReadConversations: (
+    websiteID: string,
+    sessions: string[],
+  ) => Promise<IEmptyResponse>;
+
+  batchRemoveConversations: (
+    websiteID: string,
+    sessions: string[],
+  ) => Promise<IEmptyResponse>;
+
+  batchRemovePeople: (
+    websiteID: string,
+    people: {
+      profiles: string[];
+      search: {
+        filter: {
+          model: "people";
+          criterion: string;
+          operator: "eq" | "neq" | "ex" | "nex" | "has" | "nhas" | "sw" | "ew" | "gte" | "lte" | "gt" | "lt";
+          query: string[];
+        }
+      };
+    }
+  ) => Promise<IEmptyResponse>;
 }
